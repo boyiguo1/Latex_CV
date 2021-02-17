@@ -1,0 +1,430 @@
+
+
+
+\documentclass[10pt]{article}
+
+% This is a helpful package that puts math inside length specifications
+\usepackage{calc}
+
+
+\usepackage[backend=bibtex, style=nature, sorting=ydnt, firstinits=true, maxnames=99]{biblatex}
+\setlength\bibitemsep{\baselineskip}
+%\DeclareNameAlias{author}{last-first}
+\DeclareLanguageMapping{american}{american-apa}
+
+
+
+\AtDataInput{%
+	\csnumgdef{entrycount:\therefsection}{%
+		\csuse{entrycount:\therefsection}+1}}
+
+% Print the labelnumber as the total number of entries in the
+% current refsection, minus the actual labelnumber, plus one
+\DeclareFieldFormat{labelnumber}{\mkbibdesc{#1}}    
+\newrobustcmd*{\mkbibdesc}[1]{%
+	\number\numexpr\csuse{entrycount:\therefsection}+1-#1\relax}
+
+
+\addbibresource{bibtex20180531.bib}
+%\bibliographystyle{apalike}
+% Layout: Puts the section titles on left side of page
+\reversemarginpar
+
+%
+%         PAPER SIZE, PAGE NUMBER, AND DOCUMENT LAYOUT NOTES:
+%
+% The next \usepackage line changes the layout for CV style section
+% headings as marginal notes. It also sets up the paper size as either
+% letter or A4. By default, letter was used. If A4 paper is desired,
+% comment out the letterpaper lines and uncomment the a4paper lines.
+%
+% As you can see, the margin widths and section title widths can be
+% easily adjusted.
+%
+% ALSO: Notice that the includefoot option can be commented OUT in order
+% to put the PAGE NUMBER *IN* the bottom margin. This will make the
+% effective text area larger.
+%
+% IF YOU WISH TO REMOVE THE ``of LASTPAGE'' next to each page number,
+% see the note about the +LP and -LP lines below. Comment out the +LP
+% and uncomment the -LP.
+%
+% IF YOU WISH TO REMOVE PAGE NUMBERS, be sure that the includefoot line
+% is uncommented and ALSO uncomment the \pagestyle{empty} a few lines
+% below.
+%
+
+%% Use these lines for letter-sized paper
+\usepackage[paper=letterpaper,
+            %includefoot, % Uncomment to put page number above margin
+            marginparwidth=1.2in,     % Length of section titles
+            marginparsep=.05in,       % Space between titles and text
+            margin=1in,               % 1 inch margins
+            includemp]{geometry}
+
+%% Use these lines for A4-sized paper
+%\usepackage[paper=a4paper,
+%            %includefoot, % Uncomment to put page number above margin
+%            marginparwidth=30.5mm,    % Length of section titles
+%            marginparsep=1.5mm,       % Space between titles and text
+%            margin=25mm,              % 25mm margins
+%            includemp]{geometry}
+
+%% More layout: Get rid of indenting throughout entire document
+\setlength{\parindent}{0in}
+
+%% This gives us fun enumeration environments. compactenum will be nice.
+\usepackage{paralist}
+
+%% Reference the last page in the page number
+%
+% NOTE: comment the +LP line and uncomment the -LP line to have page
+%       numbers without the ``of ##'' last page reference)
+%
+% NOTE: uncomment the \pagestyle{empty} line to get rid of all page
+%       numbers (make sure includefoot is commented out above)
+%
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}
+%\pagestyle{empty}      % Uncomment this to get rid of page numbers
+
+\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyfootoffset{\marginparsep+\marginparwidth}
+\newlength{\footpageshift}
+\setlength{\footpageshift}{0.5\textwidth+0.5\marginparsep+0.5\marginparwidth-2in}
+\lfoot{\hspace{\footpageshift}%
+       \parbox{4in}{\, \hfill %
+                   \arabic{page} of \protect\pageref*{LastPage} 
+                   \hfill \,}}
+               
+\rfoot{\hspace{\footpageshift}%
+	\parbox{4in}{\, \hfill %
+		\today
+		\hfill \,}}
+                
+%\lfoot{\hspace{\footpageshift}%
+%	\parbox{6in}{\, \hfill %
+%		\today % +LP
+		%                    \arabic{page}                               % -LP
+%		\hfill \,}}
+
+%\fancyfoot[c]{\arabic{page} of \protect\pageref*{LastPage}}
+
+% Finally, give us PDF bookmarks
+\usepackage{color,hyperref}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.3}
+\hypersetup{colorlinks,breaklinks,
+            linkcolor=darkblue,urlcolor=darkblue,
+            anchorcolor=darkblue,citecolor=darkblue}
+
+%%%%%%%%%%%%%%%%%%%%%%%% End Document Setup %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\fancyhead[LO,LE]{\bf Dustin M. Long}
+%\fancyhead[RO,RE]{\bf \today}
+
+\fancyheadoffset{\marginparsep + \marginparwidth}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Helper Commands %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The title (name) with a horizontal rule under it
+%
+% Usage: \makeheading{name}
+%
+% Place at top of document. It should be the first thing.
+\newcommand{\makeheading}[1]%
+        {\hspace*{-\marginparsep minus \marginparwidth}%
+         \begin{minipage}[t]{\textwidth+\marginparwidth+\marginparsep}%
+                {\large \bfseries #1}\\[-0.15\baselineskip]%
+                 \rule{\columnwidth}{1pt}%
+         \end{minipage}}
+%\fancyhead[LO,LE]{\makeheading{Dustin M. Long}}
+% The section headings
+%
+% Usage: \section{section name}
+%
+% Follow this section IMMEDIATELY with the first line of the section
+% text. Do not put whitespace in between. That is, do this:
+%
+%       \section{My Information}
+%       Here is my information.
+%
+% and NOT this:
+%
+%       \section{My Information}
+%
+%       Here is my information.
+%
+% Otherwise the top of the section header will not line up with the top
+% of the section. Of course, using a single comment character (%) on
+% empty lines allows for the function of the first example with the
+% readability of the second example.
+\renewcommand{\section}[2]%
+        {\pagebreak[2]\vspace{1.3\baselineskip}%
+         \phantomsection\addcontentsline{toc}{section}{#1}%
+         \hspace{0in}%
+         \marginpar{
+         \raggedright \scshape #1}#2}
+
+% An itemize-style list with lots of space between items
+\newenvironment{outerlist}[1][\enskip\textbullet]%
+        {\begin{enumerate}[#1]}{\end{enumerate}%
+         \vspace{-.6\baselineskip}}
+
+% An environment IDENTICAL to outerlist that has better pre-list spacing
+% when used as the first thing in a \section
+\newenvironment{lonelist}[1][\enskip\textbullet]%
+        {\vspace{-\baselineskip}\begin{list}{#1}{%
+        \setlength{\partopsep}{0pt}%
+        \setlength{\topsep}{0pt}}}
+        {\end{list}\vspace{-.6\baselineskip}}
+
+% An itemize-style list with little space between items
+\newenvironment{innerlist}[1][\enskip\textbullet]%
+        {\begin{compactenum}[#1]}{\end{compactenum}}
+
+% To add some paragraph space between lines.
+% This also tells LaTeX to preferably break a page on one of these gaps
+% if there is a needed pagebreak nearby.
+\newcommand{\blankline}{\quad\pagebreak[2]}
+
+%%%%%%%%%%%%%%%%%%%%%%%% End Helper Commands %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Begin CV Document %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{natbib}
+%\bibliographystyle{plainnat}
+\begin{document}
+
+\makeheading{Boyi Guo, M.S.}
+
+\section{Contact Information}
+%
+% NOTE: Mind where the & separators and \\ breaks are in the following
+%       table.
+%
+% ALSO: \rcollength is the width of the right column of the table 
+%       (adjust it to your liking; default is 1.85in).
+%
+\newlength{\rcollength}\setlength{\rcollength}{1.85in}%
+\begin{tabular}[t]{@{}p{\textwidth-\rcollength}p{\rcollength}}
+\href{https://www.soph.uab.edu/bst}{Department of Biostatistics}  	&\textit{Cell:} (217) 419-9519\\
+\href{https://www.soph.uab.edu}{Ryals School of Public Health}	&\href{mailto:boyiguo1@uab.edu}{boyiguo1@uab.edu}\\
+\href{https://www.uab.edu/home/}{University of Alabama at Birmingham}\\
+514 Ryals Public Health Building		\\
+1665 University Blvd                     \\
+Birmingham, AL 35294-0002   USA           & \\
+\end{tabular}
+
+
+\section{Research Interests}
+Bayesian Data Analysis, Longitudinal Data Analysis, Microbiome Data Analysis, Statistical Learning
+
+\section{Education}
+%
+\href{http://www.uab.edu/}{\textbf{University of Alabama at Birmingham}}, 
+Birmingham, Alabama, USA
+\begin{outerlist}
+		\item[] Ph.D., 
+        \href{https://www.soph.uab.edu/bst}
+             {Biostatistics}, In Progress
+        \begin{innerlist}
+        % Dissertation topic here
+        %\item \href{http://dc.lib.unc.edu/cdm/ref/collection/etd/id/5479}{Dissertation Topic: ``Causal Inference and Principal Stratification:
+%Competing Risks, Bounds, and Surrogates''}
+        \item Advisor: Nengjun Yi\\
+		\end{innerlist}
+\end{outerlist}
+
+\href{http://illinois.edu/}{\textbf{University of Illinois at Urbana-Champaign}}, 
+Champaign, Illinois, USA
+\begin{outerlist}
+\item[] M.S., 
+        \href{https://stat.illinois.edu/}
+             {Statistics}, May 2017
+        \begin{innerlist}
+%        \item Thesis Topic: ``A Semiparametric Approach to Linear Regression''
+       \item Advisor: {Ruoqing Zhu}\\
+        \end{innerlist}
+\end{outerlist}
+
+\href{http://illinois.edu/}{\textbf{University of Illinois at Urbana-Champaign}}, 
+Champaign, Illinois, USA
+\begin{outerlist}
+\item[] B.S., 
+        \href{https://stat.illinois.edu/}
+             {Statistics}, May 2014
+                \begin{innerlist}        
+             	%\item \emph{Cum Laude}
+             	\item Graduated with Highest Distinction
+             \end{innerlist}
+\item[] B.S., 
+        \href{https://cs.illinois.edu/}
+             {Computer Science}, May 2014
+        \begin{innerlist}        
+        %\item \emph{Cum Laude}
+        \item Minor in Mathematics
+        \end{innerlist}
+\end{outerlist}
+
+\section{Awards} 
+\href{http://www.uab.edu/}{\textbf{University of Alabama at Birmingham}}
+\begin{outerlist}\item[]
+\begin{innerlist}
+\item Dr. Al M Best Biostatistics Teaching Award \hfill 2019
+\item Outstanding Senator of The Year \hfill 2019
+\item Graduate Student Government Travel Grant\hfill 2019, 2020
+\item Blazer Graduate Research Fellowship\hfill 2017 - 2018
+\end{innerlist}
+\end{outerlist}
+
+
+
+
+
+			
+
+\section{Professional Experience}
+\href{http://www.uab.edu/}{\textbf{University of Alabama at Birmingham}}
+\begin{outerlist}
+	\item[] \textit{\bf Graduate Research Assistant} \normalfont% 
+	\hfill \textbf{December 2018 to Present}
+		\begin{innerlist}
+		\item Biostatistician for \href{http://www.regardsstudy.org/home}{REGARDS (REasons for Geographic and Racial Differences in Stroke)} study
+	\end{innerlist}
+\end{outerlist}
+
+\blankline
+
+\href{https://stat.illinois.edu/}{\textbf{University of Illinois at Urbana-Champaign Department of Statistics}}
+\begin{outerlist}
+\item[] \textit{\bf Graduate Research Assistant} \normalfont% 
+        \hfill \textbf{August 2014 to August 2017}
+\end{outerlist}
+
+
+\section{Work Experience}
+\href{http://www.dowagro.com/en-US}{\textbf{Dow AgroSciences}}
+\begin{outerlist}
+	\item[] \textit{\bf Intern in Computational Biology} \normalfont%         
+	\hfill \textbf{August 2016 to May 2017}
+	%\begin{innerlist}
+	%	\item
+	%\end{innerlist}
+	%\item[] \textit{Interim Associate Chair} \normalfont% 
+	%\hfill \textbf{October 2015 to present}
+\end{outerlist}
+
+\blankline
+
+%\section{Current Funding}
+
+%\vspace{-3ex}
+
+%O'Hara-Tompkins, N. (Principal), Cottrell, L. (Principal), \textbf{Long, D. M.} (Co-Investigator, 10\%), et al.,  ``West Virginia Prevention Research Center-Applied Research Project,'' Sponsored by CDC, Federal, (September 30, 2014 - September 29, 2019).\\
+
+
+%\section{Previous Funding}
+
+%\vspace{-3ex}
+
+%Wilson (PI), \textbf{Long, D. M.} (Supporting), et al. ``Adolescent Trials Network Coordinating Center,'' Sponsored by the Eunice Kennedy Shriver National Institute Of Child Health \& Human Development (NICHD) (February 15, 2017 – November 30, 2017).\\
+\newpage
+
+\section{Peer-Reviewed Publications}
+
+\vspace{-3ex}
+
+\nocite{*}
+\printbibliography[heading=none]
+7. Pendegraft, A. H., \textbf{Guo, B.}, Yi, N. (2019). "Bayesian hierarchical negative binomial models for multivariable analyses with applications to human microbiome count data," \textit{PloS one, 14(8)} (2019). PMID: 31437194\\
+
+6. Seifert, M. E., Gaut, J. P., \textbf{Guo, B.}, Jain, S., Malone, A. F., Geraghty, F., Della Manna, D., Yang, E. S., Yi, N., Brennan, D. C., Mannon, R. B.  ``WNT pathway signaling is associated with microvascular injury and predicts kidney transplant failure," \textit{American Journal of Transplantation} (2019). PMID: 30916889 \\
+
+5. Tang, Z., Lei, S., Zhang, X., Yi, Z., \textbf{Guo, B.}, Chen, J. Y., Shen Y., Yi N.  ``Gsslasso Cox: a Bayesian hierarchical model for predicting survival and detecting associated genes by incorporating pathway information," \textit{BMC bioinformatics, 20(1), 94} (2019). PMID: 30813883\\
+
+4.  Yi, N., Tang, Z., Zhang, X., \textbf{Guo, B.}  ``BhGLM: Bayesian hierarchical GLMs and survival models, with applications to genomics and epidemiology," \textit{Bioinformatics} (2018). PMID: 30219850\\
+
+3. Zhang, X., Pei, Y. F., Zhang, L., \textbf{Guo, B.}, Pendegraft, A., Zhuang, W., Yi, N. ``Negative Binomial Mixed Models for Analyzing Longitudinal Microbiome Data," \textit{Frontiers in microbiology, 9, 1683} (2018). PMID: 30093893\\
+
+2. Bashir, M., Wee, C., Memon, N., \textbf{Guo, B.} ``Profiling cybersecurity competition participants: Self-efficacy, decision-making and interests predict effectiveness of competitions as a recruitment tool," \textit{Computers \& Security, 65, 153-165.} (2017)\\
+
+1. Bashir, M., Lambert, A., \textbf{Guo, B.}, Memon, N., Halevi, T. ``Cybersecurity competitions: The human angle," \textit{IEEE Security \& Privacy, 13(5), 74-79} (2015).
+
+
+\section{Technical Report}
+Bashir, M., Lambert, A., Wee, J. M. C., \textbf{Guo, B.}  ``An examination of the vocational and psychological characteristics of cybersecurity competition participants," \textit{In 2015 USENIX Summit on Gaming, Games, and Gamification in Security Education (3GSE '15)} (2015).
+
+\section{In Preparation}
+
+\vspace{-3ex}
+\textbf{Guo, B.}, Zhu, R., Holscher, L. S., Auvil, L. S., Welge, M. E., Bushell, C. B., Baer, D. J., Novotny, J. A., ``Estimating optimal treatment regimes using multivariate response random forests"\\
+
+Jaeger, B. C., \textbf{Guo, B.}, ``R-squared and goodness of fit in the linear mixed model: A cautionary tale"
+
+
+\section{Presentations}($^\ast$ denotes presenter)\\
+
+\textbf{Guo, B.}$^\ast$  ``A visit to `Could Fisher, Jeffreys and Neyman have agreed on testing?','' Department of Biostatistics Journal Club, Birmingham, AL. (April 19, 2019)\\
+
+\textbf{Guo, B.}$^\ast$,  Zhu, R. ``Estimating optimal treatment regimes using multivariate random forests,'' 3rd ASA Alabama Chapter Mini-Conference, Oxford, MS. (April 5, 2019)\\
+
+\textbf{Guo, B.}$^\ast$,  Zhu, R. ``Estimating optimal treatment regimes using multivariate random forests,'' Eastern North American Region of the International Biometric Society, Philadelphia, PA. (March 25, 2019)\\
+
+\textbf{Guo, B.}$^\ast$  ``Individualized treatment and machine learning,'' National Public Health Week Student Research Seminar, Birmingham, AL. (April 5, 2018)\\
+
+Pendegraft, A. H.$^\ast$, \textbf{Guo, B.}, Yi, N., ``Hierarchical negative binomial models applied to high-fimensional human microobiome count data,'' Eastern North American Region of the International Biometric Society, Atlanta, GA. (March 22, 2018)\\
+ 
+
+
+
+\section{Service}
+%
+{University of Alabama at Birmingham}
+\begin{outerlist}\item[]
+\begin{innerlist}
+\item Committee Chair, UAB  Graduate Student Government Professional Development and Leadership \hfill 2018 - Present
+\item Student Senator, UAB  Graduate Student Government \hfill 2018 - Present
+\item Student Representative, Department of Biostatistics Graduate Program Committee \hfill 2018 - 2019
+\item Biostatistics Senator, UAB Public Health Student Association \hfill 2017 - 2019
+\end{innerlist}
+\end{outerlist}
+
+\blankline
+
+{University of Illinois at Urbana-Champaign}
+\begin{outerlist}\item[]
+\begin{innerlist}
+\item Illinois International Advisory Committee (University) \hfill 2016 - 2017
+\end{innerlist}
+\end{outerlist}
+
+\section{R pacakges}
+\begin{innerlist}
+	\item Contributer, TibbleOne
+\end{innerlist}
+
+\section{Memberships}
+\begin{innerlist}
+	\item American Statistical Association
+	\item American Public Health Association
+	\item International Chinese Statistical Association
+	\item International Biometric Society (ENAR)
+	\item Phi Kappa Phi
+\end{innerlist}
+%\end{outerlist}
+
+\section{Certifications}
+\begin{innerlist}
+	\item SAS Certified Base Programmer for SAS 9 Credential\hfill 2014
+	\item Oracle Certified Associate Java SE 7 Programmer\hfill 2014
+\end{innerlist}
+
+
+\section{Other}
+{University of Illinois at Urbana-Champaign}
+\begin{outerlist}\item[]
+	\begin{innerlist}
+		\item University Varsity in Illini Rowing Team \hfill 2011 - 2012
+	\end{innerlist}
+\end{outerlist}
+
+\end{document}
+
