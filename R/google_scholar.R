@@ -28,24 +28,38 @@ sorted_pub <- read_csv(file = here("data", "pubs.csv"))
 ## Remove Dissertation/Abstract ------------------------------------------
 
 rm_pubid <- c(
+  # Boyi's Dissertatoin
   "qxL8FJ1GzNcC", 
+  # Abstracts
   "roLk4NBRz8UC",
   "WF5omc3nYNoC",
   "eQOLeE2rZwMC",
   "YsMSGLbcyi4C",
   "W7OEmFMy1HYC",
-  "Y0pCki6q_DkC")
+  "Y0pCki6q_DkC",
+  # Conf paper
+  "u-x6o8ySG0sC"
+)
 
 
-sorted_pub |> 
-  left_join(g_pubs, by = colnames(g_pubs)) |> 
+full_pub <- sorted_pub |> 
+  full_join(g_pubs, by = c("title", "author", "journal", "pubid")) |> 
   filter(
-    ! (pubid %in% rm_pubid)
-  ) |> View()
+    !(pubid %in% rm_pubid)
+  )
 
-stopifnot("Please organize publication CVS file (path: data/pubs.csv)" = sorted_pub |> 
-            select(first_author, type, preprint) |> 
-            complete.cases() |>
-            all())
+bool_new_article <- full_pub |> 
+  select(first_author, type, preprint) |> 
+  complete.cases() |>
+  all()
 
+if(!bool_new_article){
+  full_pub |> readr::write_csv(file = here("data", "pubs.csv"))
+  stop("Please organize publication CVS file (path: data/pubs.csv)")
+}
+
+
+# First author pubs
+# full_pub |> filter(first_author==TRUE) |> 
+#   View()
 
